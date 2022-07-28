@@ -4,6 +4,9 @@ GIT_BRANCH=""
 CPACK_DEPENDENCIES=""
 CPACK_PACKAGE_SUFFIX=""
 
+# Go to home
+cd
+
 while [ $# -gt 0 ]
 do
 	case "$1" in
