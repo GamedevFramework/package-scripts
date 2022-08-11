@@ -18,7 +18,7 @@ do
     "gamedev-framework:$DISTRIBUTION" \
     /bin/bash \
       /home/compile/build-gf.sh \
-        --branch v1.0.0 \
+        --branch master \
         --runtime-dependencies "libsdl2-2.0-0,libfreetype6,zlib1g,libpugixml1v5" \
         --package-suffix "-${DISTRIBUTION_FAMILY}~${DISTRIBUTION_NAME}"
 done
