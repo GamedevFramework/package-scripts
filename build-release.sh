@@ -3,6 +3,9 @@
 # Distributions
 declare -a DISTRIBUTIONS=("debian-bullseye")
 
+mkdir -p packages
+chmod a+w packages
+
 for DISTRIBUTION in ${DISTRIBUTIONS[@]}
 do
   DISTRIBUTION_FAMILY=${DISTRIBUTION%%-*}
