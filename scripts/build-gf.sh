@@ -65,20 +65,23 @@ then
   exit 1
 fi
 
-git clone --depth 1 --branch "$GIT_BRANCH" --recursive https://github.com/GamedevFramework/gf.git
+git clone --depth 1 --branch "$GIT_BRANCH" --recursive https://github.com/ahugeat/gf.git
 
 # Build runtime deb
-PACKAGE_NAME="gf-${GIT_BRANCH:1}${CPACK_PACKAGE_SUFFIX}"
+PACKAGE_NAME="gf"
+PACKAGE_VERSION=$(grep "  VERSION" gf/CMakeLists.txt | tr -s " " | cut -d " " -f 3)
+PACKAGE_FILENAME="${PACKAGE_NAME}-${PACKAGE_VERSION}${CPACK_PACKAGE_SUFFIX}"
 rm -rf build-runtime/
-cmake -DCMAKE_BUILD_TYPE=Release -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_TESTING=OFF -S gf -B build-runtime
-cmake --build build-runtime
-cpack --config build-runtime/CPackConfig.cmake -D CPACK_DEBIAN_PACKAGE_DEPENDS="$CPACK_DEPENDENCIES" -D CPACK_DEBIAN_PACKAGE_NAME="gf" -D CPACK_PACKAGE_FILE_NAME="$PACKAGE_NAME"
-cp "$PACKAGE_NAME.deb" packages/
+cmake -DCMAKE_BUILD_TYPE=Release -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -S gf -B build-runtime
+cmake --build build-runtime --parallel $(nproc)
+cpack --config build-runtime/CPackConfig.cmake -D CPACK_DEBIAN_PACKAGE_NAME="${PACKAGE_NAME}" -D CPACK_PACKAGE_FILE_NAME="${PACKAGE_FILENAME}" -D CPACK_DEBIAN_PACKAGE_DEPENDS="$CPACK_DEPENDENCIES" -D CPACK_DEB_COMPONENT_INSTALL=ON -D CPACK_COMPONENTS_ALL="Runtime"
+cp "${PACKAGE_FILENAME}-Runtime.deb" "packages/$PACKAGE_FILENAME.deb"
 
 # Build dev deb
-PACKAGE_NAME="gf-dev-${GIT_BRANCH:1}${CPACK_PACKAGE_SUFFIX}"
+PACKAGE_NAME="gf-dev"
+PACKAGE_FILENAME="${PACKAGE_NAME}-${PACKAGE_VERSION}${CPACK_PACKAGE_SUFFIX}"
 rm -rf build-dev/
-cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DGF_SINGLE_COMPILTATION_UNIT=ON -DBUILD_TESTING=OFF -S gf -B build-dev
-cmake --build build-dev
-cpack --config build-dev/CPackConfig.cmake -D CPACK_PACKAGE_FILE_NAME="$PACKAGE_NAME"
-cp "$PACKAGE_NAME.deb" packages/
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -S gf -B build-dev
+cmake --build build-dev --parallel $(nproc)
+cpack --config build-dev/CPackConfig.cmake -D CPACK_DEBIAN_PACKAGE_NAME="${PACKAGE_NAME}" -D CPACK_PACKAGE_FILE_NAME="${PACKAGE_FILENAME}" -D CPACK_DEBIAN_PACKAGE_DEPENDS="$CPACK_DEPENDENCIES"
+cp "$PACKAGE_FILENAME.deb" packages/
