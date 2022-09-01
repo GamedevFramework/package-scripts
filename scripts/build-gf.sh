@@ -58,15 +58,8 @@ then
 fi
 
 # Build runtime deb
-rm -rf build-runtime/
-cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -DGF_DEV_PACKAGE=OFF -DGF_PACKAGE_SUFFIX="$CPACK_PACKAGE_SUFFIX" -S gf -B build-runtime
-cmake --build build-runtime --parallel $(nproc)
-cpack --config build-runtime/CPackConfig.cmake -D CPACK_DEBIAN_RUNTIME_PACKAGE_NAME="gf" -D CPACK_DEBIAN_PACKAGE_RUNTIME_CONFLICTS="gf-dev"
+rm -rf build
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -DGF_PACKAGE_SUFFIX="$CPACK_PACKAGE_SUFFIX" -S gf -B build
+cmake --build build --parallel $(nproc)
+cpack --config build/CPackConfig.cmake
 mv *.deb packages/
-
-# Build dev deb
-# rm -rf build-dev/
-# cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGF_BUILD_GAMES=OFF -DGF_BUILD_EXAMPLES=OFF -DGF_BUILD_DOCUMENTATION=OFF -DBUILD_TESTING=OFF -DGF_DEV_PACKAGE=ON -DGF_PACKAGE_SUFFIX="$CPACK_PACKAGE_SUFFIX" -S gf -B build-dev
-# cmake --build build-dev --parallel $(nproc)
-# cpack --config build-dev/CPackConfig.cmake -D CPACK_DEBIAN_PACKAGE_CONFLICTS="gf"
-# mv *.deb packages/

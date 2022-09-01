@@ -8,9 +8,6 @@ chmod a+w packages
 
 for DISTRIBUTION in ${DISTRIBUTIONS[@]}
 do
-  DISTRIBUTION_FAMILY=${DISTRIBUTION%%-*}
-  DISTRIBUTION_NAME=${DISTRIBUTION#*-}
-
   # Build docker image
   docker build -f "$DISTRIBUTION/Dockerfile" -t "gamedev-framework:$DISTRIBUTION" .
 
@@ -22,5 +19,5 @@ do
     /bin/bash \
       /home/compile/build-gf.sh \
         --branch one-package \
-        --package-suffix "-${DISTRIBUTION_FAMILY}-${DISTRIBUTION_NAME}"
+        --package-suffix "${DISTRIBUTION}"
 done
