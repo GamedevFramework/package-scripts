@@ -48,7 +48,7 @@ then
   exit 1
 fi
 
-git clone --depth 1 --branch "$GIT_BRANCH" --recursive https://github.com/ahugeat/gf.git
+git clone --depth 1 --branch "$GIT_BRANCH" --recursive https://github.com/GamedevFramework/gf
 
 if [ "$OS_NAME" = "ubuntu" ]
 then
