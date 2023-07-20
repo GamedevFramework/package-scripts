@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]
+then
+	echo "Missing argument"
+	echo -e "\t$0 TAG"
+	exit 1
+fi
+
+TAG=$1
+
 # Distributions
 declare -a DISTRIBUTIONS=("debian-bullseye" "debian-bookworm" "ubuntu-focal" "ubuntu-jammy")
 
@@ -13,11 +22,12 @@ do
 
   # Run compilation
   docker run \
+    --rm \
     --user compile \
     -v $PWD/packages:/home/compile/packages \
     "gamedev-framework:$DISTRIBUTION" \
     /bin/bash \
       /home/compile/build-gf.sh \
-        --branch one-package \
+        --branch $TAG \
         --package-suffix "${DISTRIBUTION}"
 done
